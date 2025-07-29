@@ -1,0 +1,15 @@
+node_modules
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+.clinerules
+venv/*
+memory-bank/*
+data/unzip_files/*
+!data/unzip_files/ここにzipが展開される
+data/zip_minify/*
+!data/zip_minify/ここにリサイズ後のzipが保存される
+data/zip_original/*
+!data/zip_original/ここに処理対象のzipを置く
+size_list.yaml
