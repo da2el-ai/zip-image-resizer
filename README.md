@@ -11,7 +11,16 @@
 
 ## インストール方法
 
-### 1. 仮想環境の作成
+### 1. リポジトリのクローン
+
+まず、このリポジトリをローカル環境にクローンします。
+
+```bash
+git clone https://github.com/da2el-ai/zip-image-resizer.git
+cd zip-image-resizer
+```
+
+### 2. 仮想環境の作成
 
 このスクリプトは仮想環境(venv)での実行を推奨します。
 
@@ -26,7 +35,7 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-### 2. 必要なライブラリのインストール
+### 3. 必要なライブラリのインストール
 
 `requirements.txt` を使って、必要なライブラリをインストールします。
 
