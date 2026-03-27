@@ -1,0 +1,22 @@
+@echo off
+rem venvディレクトリの存在をチェック
+if not exist venv (
+  echo venvディレクトリを作成します。
+  python -m venv venv
+  
+  rem venvを有効化
+  call venv\Scripts\activate
+  
+  rem 必要なモジュールをインストール（初回のみ）
+  echo 必要なモジュールをインストールします...
+  pip install -r requirements.txt
+) else (
+  rem venvを有効化
+  call venv\Scripts\activate
+)
+
+rem Pythonスクリプトを実行
+echo get_size.py を実行します...
+python get_size.py
+
+echo 完了しました。
