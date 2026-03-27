@@ -40,8 +40,8 @@ def process_images_in_folder(extract_folder, base_name):
                             new_width = int(float(img.width) * float(ratio))
                             resized_img = img.resize((new_width, RESIZE_IMAGE_HEIGHT), Image.Resampling.LANCZOS)
 
-                            # PNGの透過チャンネルなどを考慮してRGBに変換
-                            if resized_img.mode in ('RGBA', 'P'):
+                            # PNGの透過チャンネルなどを考慮してRGBに変換（LA・PAモードも対応）
+                            if resized_img.mode in ('RGBA', 'LA', 'PA', 'P'):
                                 resized_img = resized_img.convert('RGB')
 
                             # 新しいファイルパス (拡張子を.jpgに)
