@@ -57,10 +57,21 @@ def get_image_sizes_from_zip(zip_path):
     else:
         print(f"  Already extracted: {extract_folder}")
     
+    # PDFが含まれているかチェック
+    has_pdf = False
+    for root, _, files in os.walk(extract_folder):
+        for file in files:
+            if file.lower().endswith('.pdf'):
+                has_pdf = True
+                print(f"    PDF found: {file}")
+                break
+        if has_pdf:
+            break
+
     # 画像の高さを収集（サイズごとの枚数もカウント）
     height_counts = {}  # {height: count} の辞書
     has_large_image = False  # MAX_IMAGE_HEIGHT以上の画像があるかチェック
-    
+
     for root, _, files in os.walk(extract_folder):
         for file in files:
             if file.lower().endswith(SUPPORTED_EXTENSIONS):
@@ -74,13 +85,18 @@ def get_image_sizes_from_zip(zip_path):
                         print(f"    {file}: {height}px")
                 except Exception as e:
                     print(f"    Could not process {file}: {e}")
-    
+
+    # PDFが含まれている場合はminify処理をスキップ（展開フォルダはそのまま残す）
+    if has_pdf:
+        print(f"  PDF included. Skipping minify processing.")
+        return height_counts, "has_pdf"
+
     # MAX_IMAGE_HEIGHT以上の画像がない場合の処理
     if not has_large_image:
         handle_no_large_images(zip_path, extract_folder)
-        return height_counts, has_large_image
-    
-    return height_counts, has_large_image
+        return height_counts, "small_only"
+
+    return height_counts, "has_large"
 
 def main():
     """メイン処理"""
@@ -101,12 +117,15 @@ def main():
     
     for zip_file in zip_files:
         zip_path = os.path.join(FOLDER_ORIGINAL, zip_file)
-        heights, has_large_image = get_image_sizes_from_zip(zip_path)
-        if has_large_image is True:
+        heights, status = get_image_sizes_from_zip(zip_path)
+        if status == "has_large":
             size_data[zip_file] = heights
-        else:
+        elif status == "small_only":
             # MAX_IMAGE_HEIGHT以上の画像がない場合は==付きで記録
             size_data[f"=={zip_file}"] = heights
+        elif status == "has_pdf":
+            # PDFが含まれている場合は##付きで記録
+            size_data[f"##{zip_file}"] = heights
     
     # YAMLファイルに出力
     with open(SIZE_FILE, 'w', encoding='utf-8') as f:
